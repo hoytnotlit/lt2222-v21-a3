@@ -50,6 +50,7 @@ if __name__ == "__main__":
 
     instances = get_instances(args.test_data)
     # predictions = model(instances[0]) # Use the model to predict instances
+    # print(predictions)
     # Write the text with the predicted (as opposed to the real) vowels back into an output file.
     # f = open("predictions.txt", "w")
     # f.write(predictions)

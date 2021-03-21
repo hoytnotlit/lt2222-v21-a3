@@ -2,71 +2,96 @@ import argparse
 import torch
 import train
 import pandas as pd
+import numpy as np
 
+vowels = sorted(['y', 'é', 'ö', 'a', 'i', 'å', 'u', 'ä', 'e', 'o'])
 
-def get_instances(test_data):
-    # TODO should use training data for feature lengths..?
-    # data = load_data(args.test_data) 
-    data, vocab = train.a(test_data) # Load the test data
-    # tensor([[[0., 0., 0.,  ..., 0., 0., 0.],
-    #      [0., 0., 0.,  ..., 0., 1., 0.],
-    #      [0., 0., 0.,  ..., 0., 0., 0.],
-    #      ...,
-    #      [0., 0., 0.,  ..., 0., 0., 0.],
-    #      [0., 0., 0.,  ..., 0., 0., 0.],
-    #      [0., 0., 0.,  ..., 0., 0., 0.]]])
-    # y = []
-    # X = []
-    # vowels = sorted(['y', 'é', 'ö', 'a', 'i', 'å', 'u', 'ä', 'e', 'o'])
-    # print(len(p))
-    
-    # z = np.zeros(113)
-    # z[p.index(x)] = 1
+def load_data(f):
+    mm = []
+    with open(f, "r") as q:
+        for l in q:
+            mm += [c for c in l]
 
-    # for v in range(len(data) - 4):
-    #     if data[v+2] not in vowels:
-    #         continue
+    mm = ["<s>", "<s>"] + mm + ["<e>", "<e>"]
+    return mm, list(set(mm))
+
+def load_train_vocab(f):
+    mm = []
+    with open(f, "r") as q:
+        for l in q:
+            mm += [c for c in l]
+
+    mm = ["<s>", "<s>"] + mm + ["<e>", "<e>"]
+    return list(set(mm))
+
+def get_feature(token, vocab, vocab_len):
+    z = np.zeros(vocab_len)
+    z[vocab.index(token)] = 1
+    return z
+
+def get_test_instances(data, vocab, vocab_len):
+    classes = []
+    features = []
+    for v in range(len(data) - 4):
+        if data[v+2] not in vowels:
+            continue
         
-    #     h2 = vowels.index(u[v+2])
-    #     y.append(h2)
-    #     r = np.concatenate([g(x, p) for x in [data[v], data[v+1], data[v+3], data[v+4]]])
-    #     X.append(r)
+        h2 = vowels.index(data[v+2])
+        classes.append(h2)
+        feat = np.concatenate([get_feature(x, vocab, vocab_len) for x in [data[v], data[v+1], data[v+3], data[v+4]]])
+        features.append(feat)
 
-    # np.array(X), np.array(y)
+    return np.array(features), np.array(classes)
 
-    X, y = train.b(data, vocab) # Create evaluation instances compatible with the training instances.  
-    # (A simplifying assumption for the purposes of the assignment: assuming that the neighbouring 
-    # vowels are known as though the Fairy hadn't stolen them.)
+def get_instances(data, vocab, train_data):
+    # load the vocab from train data to use for feature lengths to make testing instances compatible
+    # with training instances
+    train_vocab = load_train_vocab(train_data)
+    X, y = get_test_instances(data, vocab, len(train_vocab)) # create evaluation instances
+
+    # create tensor from dataframe
     df = pd.DataFrame(X)
     df['class'] = y
     featuredf = df.drop('class', axis=1)
     classdf = df['class']
-    tensor = torch.Tensor(df.to_numpy())
     tensor = torch.Tensor(featuredf.to_numpy()), torch.LongTensor(classdf.to_numpy())
+
     return tensor
     
 
 if __name__ == "__main__":
-    # What eval.py will do from the command line:
-
     parser = argparse.ArgumentParser()
     parser.add_argument("model", type=str)
     parser.add_argument("test_data", type=str)
+    parser.add_argument("train_data", type=str)
     
     args = parser.parse_args()
 
-    model = torch.load(args.model) # Load a model produced by train.py
+    model = torch.load(args.model) # load a model produced by train.py
     model.eval()
 
-    testing_instances, actual_classes = get_instances(args.test_data)
-    outputs = model(testing_instances.unsqueeze(0)) # Use the model to predict instances
+    data, vocab = load_data(args.test_data) # load the test data
+    testing_instances, actual_classes = get_instances(data, vocab, args.train_data)
+    outputs = model(testing_instances.unsqueeze(0)) # predict instances
     predictions = pd.Series(outputs.squeeze(0).argmax(dim=1).numpy())
-
-    # print(train.vowels)
+    actual_df = pd.DataFrame(actual_classes)
     # Write the text with the predicted (as opposed to the real) vowels back into an output file.
+    new_text = []
+    next_index = 0
+    for token in data:
+        if token in vowels:
+            new_text.append(vowels[predictions[next_index]])
+            next_index = next_index + 1
+        else:
+            new_text.append(token)
+    # print(''.join(new_text))
+    # print(''.join(data))
+    # russmassän gönaruleå edsvello d:ä plänk
+    # rassmusson generaleu edsvalla d:o plank
+    with open("predicted.txt", "w") as new_file:
+        new_file.write(''.join(new_text))
     # f = open("predictions.txt", "w")
-    # f.write(predictions)
+    # f.write(new_text)
     # f.close()
     # Print the accuracy of the model to the terminal.
-
-    # https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+    # accuracy = len(actual_df[predictions == actual_df]) / len(actual_df)

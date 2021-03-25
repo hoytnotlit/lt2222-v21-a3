@@ -56,27 +56,62 @@ A tuple where the first element is a 2d-numpy array of vowel feature vectors and
 ### command-line arguments
 * m = path for training file
 * h = path to save resulting model to
-* k = (optional) hiddensize, TODO what is this??, default value is 200
+* k = (optional) hiddensize, size of the output features, default value is 200
 * r = (optional) epochs, default value 100
 
 ### main
 In the main-block of the code the command-line arguments are processed and functions a and b are run. After this the train-function from the module model.py is used to train a model. The train-function takes as arguments feature vectors and their actual classes (vowels), the vocabulary, hiddensize, and epochs. The train-function returns a model which is finally saved to the specified file path.
 
 
-<!-- >> python3 train.py
-usage: train.py [-h] [--k K] [--r R] m h
-train.py: error: the following arguments are required: m, h
-dest - The name of the attribute to be added to the object returned by parse_args().??? -->
-
 ## Part 2
+usage: eval.py [-h] model test_data train_data output_file
+
+positional arguments:
+  model
+  test_data
+  train_data
+  output_file
 
 ## Part 3
-Train and evaluate the following models:
+Train:
 
-    Five different variations of the --k option, holding the --e option at its default.
-    Five different variations of the --e option, holding the --k option at its default.
+Five different variations of the --k option, holding the --r option at its default.
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_50.pt --k=50
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_100.pt --k=100
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_250.pt --k=250
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_300.pt --k=300
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_500.pt --k=500
 
-Include the best model and output text in your repository with its parameters.  Describe any patterns you see, if there are any.  Look at the output texts and make qualitative comments on the performances of the model.
+Five different variations of the --r option, holding the --k option at its default.
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_200.pt --r=200
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_300.pt --r=300
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_500.pt --r=500
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_750.pt --r=750
+    python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_1000.pt --r=1000
+
+Evaluate:
+
+    python3 eval.py model_hiddensize_50.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_50.txt
+    python3 eval.py model_hiddensize_100.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_100.txt
+    python3 eval.py model_hiddensize_250.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_250.txt
+    python3 eval.py model_hiddensize_300.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_300.txt
+    python3 eval.py model_hiddensize_500.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_500.txt
+    python3 eval.py model_epoch_200.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_200.txt;python3 eval.py model_epoch_300.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_300.txt;python3 eval.py model_epoch_500.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_500.txt;python3 eval.py model_epoch_1000.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_1000.txt;python3 eval.py model_epoch_750.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_750.txt
+    
+    Model accuracy is 0.13309797531758244
+    Model accuracy is 0.12324613017108717
+    Model accuracy is 0.1189161461633626
+    Model accuracy is 0.13323375878820795
+    Model accuracy is 0.1364925620832202
+    Model accuracy is 0.16834132947104793
+    Model accuracy is 0.12480009655713467
+    Model accuracy is 0.14534866177846173
+    Model accuracy is 0.16290999064602757
+    Model accuracy is 0.13439546181467066
+
+The model which had the highest accuracy is the one that was trained with 200 epochs and this is the model and the predictions that I have included in my repository.
+
+TODO Describe any patterns you see, if there are any.  Look at the output texts and make qualitative comments on the performances of the model.
 
 ## Bonuses
 

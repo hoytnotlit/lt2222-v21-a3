@@ -75,7 +75,6 @@ if __name__ == "__main__":
     testing_instances, actual_classes = get_instances(data, vocab, args.train_data)
     outputs = model(testing_instances.unsqueeze(0)) # predict instances
     predictions = pd.Series(outputs.squeeze(0).argmax(dim=1).numpy())
-    # actual_df = pd.DataFrame(actual_classes)
     actual = pd.Series(actual_classes)
 
     # Write the text with the predicted (as opposed to the real) vowels back into an output file.
@@ -90,14 +89,6 @@ if __name__ == "__main__":
 
     with open(args.output_file, "w") as new_file:
         new_file.write(''.join(new_text))
-
-    # correct_predictions = 0
-    # for item in zip(predictions.to_list(), actual.to_list()):
-    #     if item[0] == item[1]:
-    #         correct_predictions = correct_predictions + 1
-
-    # print(len(actual[predictions == actual]))
-    # print(correct_predictions)
     
     # Print the accuracy of the model to the terminal
     accuracy = len(actual[predictions == actual]) / len(actual)

@@ -9,14 +9,11 @@ Explain what the functions a, b, and g do, as well as the meaning of the command
 Arguments:
 * f = filepath
 
-Open a text file and create a list of all the tokens in the file. Add two start-tokens in the beginning of the list and two end-tokens at the end of the list. 
+Open a text file and create a list of all the tokens (by token from here on out I mean a single letter, number or punctuation) in the file. Add two start-tokens in the beginning of the list and two end-tokens at the end of the list. 
 
 Return:
 
 A tuple where the first element is a list of all tokens and the second element is a list of unique tokens in the file.
-
-<!-- open file, loop through its lines, for every line in the file (NOPE append a new list to the list mm) add the tokens of the line to the list mm (so "extend" the list with the tokens of the sentence) 
-after this add two "<s>"-tokens to the beginning of the list mm and two "<e>" tokens to the end of the list -> you will have a list of all the tokens in the file. The return result will be a two element tuple where the first element is the list mm and the second element is a set (as a list) of the tokens -->
 
 ### g(x, p)
 Arguments:
@@ -30,24 +27,15 @@ An array of zeros and a one. This array is concatenated into a feature vector fo
 
 ### b(u, p)
 Arguments:
-<!-- u and p are a result from function a, so -->
 * u = list of all tokens in the text
 * p = list of unique tokens in the text (or the vocabulary)
 
-Loop through all tokens. To do this loop the range from 0 to length of token list minus 4 and access the n + 2 element in the token list. This works because the last two tokens are end-tokens.
+Loop through all tokens. To do this loop the range from 0 to length of token list minus 4 (to avoid out of range error when checking for next two tokens) and access the n + 2 element in the token list. The last two tokens are end-tokens and they will not be checked, neither will the first two, which are start-tokens.
 
 On every iteration check if the token is a vowel. If not, continue to next iteration. In case of a vowel, do the following:
 
 1. Append to the initialised list *gt* the index of the current vowel in the vowels-list defined outside the function.
-2. For the two preceding tokens and two succeeding tokens of the current vowel, call the function g and concatenate the return values into a single array. This will be the feature vector of the current vowel. The feature vector is an array of mostly zeros but at the index of the preceding and succeeding tokens the value will be 1. (TODO or more?? CHeck this!) Append the feature vector to the intialised list *gr*.
-
-<!-- 
-gt = list of vowel indices
-gr = list of what
-loop through the range from 0 to lenght of all tokens minus 4 (why minus 4? -> to avoid out of index error maybe?)
-on every round inspect the element at i+2 position. If this element is not a vowel, dont continue to the next part. 
-Next part: get the token from "all tokens"- list with the current index -> so the letter previous to the vowel and then the next two letters after the vowel. For each of these 3 tokens, call the function g(x, p) which will return an array for each token, the result will be concatented into a single array. (so r will be an array of zeros, the length of the vocabulary and in place of each of the three letters there will be 1 eg if the vocabsize is 5 [0,1,0,1,1])
-After each iteration return a tuple where the first element is a numpy array of the list gr and the seconf element a numpy array of the list of vowel indices. np.array(gr), np.array(gt) -->
+2. For the two preceding tokens and two succeeding tokens of the current vowel, call the function g and concatenate the return values into a single array. This will be the feature vector of the current vowel. The feature vector is an array of mostly zeros but at the index of the preceding and succeeding tokens the value will be 1. Append the feature vector to the intialised list *gr*.
 
 Return:
 
@@ -64,13 +52,15 @@ In the main-block of the code the command-line arguments are processed and funct
 
 
 ## Part 2
-usage: eval.py [-h] model test_data train_data output_file
+Usage: eval.py [-h] model test_data train_data output_file
 
-positional arguments:
-  model
-  test_data
-  train_data
-  output_file
+Aarguments:
+* model: the path of the model to evaluate
+* test_data: the data to test on
+* train_data: the original training data (explained below)
+* output_file: file path to save predicted text to
+
+A notable comment on the design choice of eval.py was taking the training data as a positional argument. This is because the feature vectors need to be the length of the training vocabulary, other wise there will be an error with incompatible sizes (RuntimeError: mat1 and mat2 shapes cannot be multiplied (66282x400 and 452x200)). 
 
 ## Part 3
 Train:
@@ -115,9 +105,12 @@ Evaluate:
     Model accuracy is 0.16290999064602757
     Model accuracy is 0.13439546181467066
 
+
 The model which had the highest accuracy is the one that was trained with 200 epochs and this is the model and the predictions that I have included in my repository.
 
-TODO Describe any patterns you see, if there are any.  Look at the output texts and make qualitative comments on the performances of the model.
+One observation I made from the most succesful text was that the word "och" seemed to be predicted quite well. With the help of grep and wc in the command line I found out that the predictions_e_200.txt file contained 882 instances of the word "och" and the total amount of "och" in the original testing test was 1152. So at least this model was pretty decent at guessing that word(accuracy of 0.765625). In comparison the output of least accurate model predictions_hsz_250.txt contained 126 instances of the word "och" but instead had 728 instances of "ech". Similarly in some other results the majority of "och" words was guessed with the same vowel so as ech, åch, öch etc... So the model predicted the correct pattern for "och" in most cases but with the wrong vowel. Some other files had a lot of mix with different vowels for "och".
+
+The same behaviour repeats at least for the words "jag" but in predictions_e_200.txt it is instead "jög" (67/80 cases), "den" (419/909 cases), and "en" as "on" (365/378). My guess is that frequent words and stop words are much more likely to be predicted correctly because they occur more often providing the model with more data on these words.
 
 ## Bonuses
 

@@ -64,6 +64,7 @@ if __name__ == "__main__":
     parser.add_argument("model", type=str)
     parser.add_argument("test_data", type=str)
     parser.add_argument("train_data", type=str)
+    parser.add_argument("output_file", type=str)
     
     args = parser.parse_args()
 
@@ -74,7 +75,9 @@ if __name__ == "__main__":
     testing_instances, actual_classes = get_instances(data, vocab, args.train_data)
     outputs = model(testing_instances.unsqueeze(0)) # predict instances
     predictions = pd.Series(outputs.squeeze(0).argmax(dim=1).numpy())
-    actual_df = pd.DataFrame(actual_classes)
+    # actual_df = pd.DataFrame(actual_classes)
+    actual = pd.Series(actual_classes)
+
     # Write the text with the predicted (as opposed to the real) vowels back into an output file.
     new_text = []
     next_index = 0
@@ -84,14 +87,18 @@ if __name__ == "__main__":
             next_index = next_index + 1
         else:
             new_text.append(token)
-    # print(''.join(new_text))
-    # print(''.join(data))
-    # russmassän gönaruleå edsvello d:ä plänk
-    # rassmusson generaleu edsvalla d:o plank
-    with open("predicted.txt", "w") as new_file:
+
+    with open(args.output_file, "w") as new_file:
         new_file.write(''.join(new_text))
-    # f = open("predictions.txt", "w")
-    # f.write(new_text)
-    # f.close()
-    # Print the accuracy of the model to the terminal.
-    # accuracy = len(actual_df[predictions == actual_df]) / len(actual_df)
+
+    # correct_predictions = 0
+    # for item in zip(predictions.to_list(), actual.to_list()):
+    #     if item[0] == item[1]:
+    #         correct_predictions = correct_predictions + 1
+
+    # print(len(actual[predictions == actual]))
+    # print(correct_predictions)
+    
+    # Print the accuracy of the model to the terminal
+    accuracy = len(actual[predictions == actual]) / len(actual)
+    print(f"Model accuracy is {accuracy}")

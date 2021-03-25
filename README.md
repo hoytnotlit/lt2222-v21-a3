@@ -76,6 +76,7 @@ positional arguments:
 Train:
 
 Five different variations of the --k option, holding the --r option at its default.
+
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_50.pt --k=50
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_100.pt --k=100
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_250.pt --k=250
@@ -83,6 +84,7 @@ Five different variations of the --k option, holding the --r option at its defau
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_hiddensize_500.pt --k=500
 
 Five different variations of the --r option, holding the --k option at its default.
+
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_200.pt --r=200
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_300.pt --r=300
     python3 train.py /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt model_epoch_500.pt --r=500
@@ -96,7 +98,11 @@ Evaluate:
     python3 eval.py model_hiddensize_250.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_250.txt
     python3 eval.py model_hiddensize_300.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_300.txt
     python3 eval.py model_hiddensize_500.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_hsz_500.txt
-    python3 eval.py model_epoch_200.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_200.txt;python3 eval.py model_epoch_300.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_300.txt;python3 eval.py model_epoch_500.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_500.txt;python3 eval.py model_epoch_1000.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_1000.txt;python3 eval.py model_epoch_750.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_750.txt
+    python3 eval.py model_epoch_200.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_200.txt
+    python3 eval.py model_epoch_300.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_300.txt
+    python3 eval.py model_epoch_500.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_500.txt
+    python3 eval.py model_epoch_1000.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_1000.txt
+    python3 eval.py model_epoch_750.pt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtest.lower.txt /home/xsayas@GU.GU.SE/scratch/lt2222-v21-resources/svtrain.lower.txt predictions_e_750.txt
     
     Model accuracy is 0.13309797531758244
     Model accuracy is 0.12324613017108717

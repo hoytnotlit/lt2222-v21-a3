@@ -54,7 +54,7 @@ In the main-block of the code the command-line arguments are processed and funct
 ## Part 2
 Usage: eval.py [-h] model test_data train_data output_file
 
-Aarguments:
+Arguments:
 * model: the path of the model to evaluate
 * test_data: the data to test on
 * train_data: the original training data (explained below)

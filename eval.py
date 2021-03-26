@@ -3,26 +3,9 @@ import torch
 import train
 import pandas as pd
 import numpy as np
+import train
 
 vowels = sorted(['y', 'é', 'ö', 'a', 'i', 'å', 'u', 'ä', 'e', 'o'])
-
-def load_data(f):
-    mm = []
-    with open(f, "r") as q:
-        for l in q:
-            mm += [c for c in l]
-
-    mm = ["<s>", "<s>"] + mm + ["<e>", "<e>"]
-    return mm, list(set(mm))
-
-def load_train_vocab(f):
-    mm = []
-    with open(f, "r") as q:
-        for l in q:
-            mm += [c for c in l]
-
-    mm = ["<s>", "<s>"] + mm + ["<e>", "<e>"]
-    return list(set(mm))
 
 def get_feature(token, vocab, vocab_len):
     z = np.zeros(vocab_len)
@@ -46,7 +29,7 @@ def get_test_instances(data, vocab, vocab_len):
 def get_instances(data, vocab, train_data):
     # load the vocab from train data to use for feature lengths to make testing instances compatible
     # with training instances
-    train_vocab = load_train_vocab(train_data)
+    train_vocab = train.a(train_data)[1]
     X, y = get_test_instances(data, vocab, len(train_vocab)) # create evaluation instances
 
     # create tensor from dataframe
@@ -57,7 +40,6 @@ def get_instances(data, vocab, train_data):
     tensor = torch.Tensor(featuredf.to_numpy()), torch.LongTensor(classdf.to_numpy())
 
     return tensor
-    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -71,7 +53,7 @@ if __name__ == "__main__":
     model = torch.load(args.model) # load a model produced by train.py
     model.eval()
 
-    data, vocab = load_data(args.test_data) # load the test data
+    data, vocab = train.a(args.test_data) # load the test data
     testing_instances, actual_classes = get_instances(data, vocab, args.train_data)
     outputs = model(testing_instances.unsqueeze(0)) # predict instances
     predictions = pd.Series(outputs.squeeze(0).argmax(dim=1).numpy())

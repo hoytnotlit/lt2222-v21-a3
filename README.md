@@ -60,7 +60,9 @@ Aarguments:
 * train_data: the original training data (explained below)
 * output_file: file path to save predicted text to
 
-A notable comment on the design choice of eval.py was taking the training data as a positional argument. This is because the feature vectors need to be the length of the training vocabulary, other wise there will be an error with incompatible sizes (RuntimeError: mat1 and mat2 shapes cannot be multiplied (66282x400 and 452x200)). 
+A notable comment on the design choice of eval.py was taking the training data as a positional argument. This is because the feature vectors need to be the length of the training vocabulary, other wise there will be an error with incompatible sizes (RuntimeError: mat1 and mat2 shapes cannot be multiplied (66282x400 and 452x200)).
+
+I ended up using function a from train.py to load the test data and training vocab. I made modified functions of b and g in eval.py to handle correct vector length.
 
 ## Part 3
 Train:
